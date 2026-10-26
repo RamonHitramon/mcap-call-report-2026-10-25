@@ -7,7 +7,7 @@ const field=(list,key,value)=>{const line=el('div');line.append(el('dt',key),el(
 let state=null,busy=false;
 function render(){
  const s=state,age=Date.now()/1000-s.updated_at,stale=age>300;
- $('status').textContent=(stale?'⚠ Снимок устарел. ':'● Демо работает · ')+at(s.updated_at)+' · новых коллов: '+s.signals;
+ $('status').textContent=(stale?'⚠ Снимок устарел. ':'● Демо работает · ')+at(s.updated_at)+(s.run_id?' · '+s.run_id:'')+' · новых коллов: '+s.signals;
  $('status').className=stale?'warning':'muted';$('wallets').replaceChildren();
  for(const w of s.wallets){const card=el('article',undefined,'card');card.append(el('h3',w.name),el('small','Оценка счёта с расходами'),el('div',sol(w.equity_sol),'big'),el('div',(w.net_sol>=0?'+':'')+sol(w.net_sol)+' · '+(w.net_sol*100).toFixed(2)+'%',w.net_sol>=0?'pos':'neg'));const dl=el('dl');field(dl,'Свободно',sol(w.cash_sol));field(dl,'Реализовано',sol(w.realised_sol));field(dl,'Открыто / закрыто',w.open+' / '+w.closed);field(dl,'Пропущено',w.skipped);if(w.stale)field(dl,'Устаревшие оценки',w.stale);card.append(dl);$('wallets').append(card);}
  const selected=$('filter').value;const ps=s.positions.filter(p=>selected==='all'||p.strategy===selected);$('positions').replaceChildren();
