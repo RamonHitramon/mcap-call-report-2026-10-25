@@ -49,7 +49,7 @@ test('frontend has semantic scroll table, new feed/cache path, safe text and all
  const js=await readFile(new URL('./paper.mjs',import.meta.url),'utf8');
  assert.match(html,/<table[ >]/); assert.match(html,/<tbody id="positions"/); assert.match(html,/scope="col"/);
  assert.match(html,/id="status-filter"/); assert.match(html,/id="sort"/); assert.match(html,/overflow:auto/);
- assert.match(html,/paper.mjs\?v=table1/); assert.match(js,/refs\/heads\/paper-feed\/live-paper.json/);
+ assert.match(html,/paper.mjs\?v=cash1/); assert.match(js,/refs\/heads\/paper-feed\/live-paper.json/);
  assert.doesNotMatch(js,/innerHTML/); assert.match(js,/paper-table-model.mjs\?v=table1/);
 });
 test('frontend renders safe rows, snapshot marks, empty tbody and preserves filters on refresh',async()=>{
