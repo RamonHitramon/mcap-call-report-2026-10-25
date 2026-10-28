@@ -1,3 +1,4 @@
+import {updateCharts} from './paper-charts.mjs';
 const feed='https://raw.githubusercontent.com/RamonHitramon/mcap-call-report-2026-10-25/paper-feed/live-paper.json';
 const $=id=>document.getElementById(id);
 const sol=v=>Number(v).toFixed(6)+' SOL';
@@ -14,7 +15,7 @@ function render(){
  if(!ps.length)$('positions').append(el('p',s.signals?'В этом фильтре пока нет сделок.':'Ожидаем первый новый подходящий колл. Старые сигналы задним числом не покупаются.','empty'));
  for(const p of ps){const card=el('article',undefined,'trade');const name=s.wallets.find(w=>w.id===p.strategy)?.name||p.strategy;const title=el('h3',p.symbol+' · '+name);card.append(title,el('div',p.address,'address'));const dl=el('dl');field(dl,'Вход',at(p.opened));field(dl,'Затраты',sol(p.cost));field(dl,'Состояние',p.closed?'Закрыта · '+p.reason:(Date.now()/1000-p.last_seen>90?'Открыта · оценка устарела':'Открыта'));field(dl,'Трейлинг',p.strategy==='trail50_20'?(p.armed?'Активирован':'Ожидает +50%'):'—');if(p.closed){field(dl,'Выход',at(p.closed));field(dl,'Получено',sol(p.proceeds));field(dl,'Чистый результат',sol(p.proceeds-p.cost));}else{field(dl,'Последняя оценка, до комиссии',sol(p.last_mark));field(dl,'Оценка от',at(p.last_seen));}card.append(dl);const link=el('a','Исходный колл ↗');if(/^https:\/\/t\.me\/mcap100k_sol\/\d+$/.test(p.source_url))link.href=p.source_url;link.target='_blank';link.rel='noopener noreferrer';card.append(link);$('positions').append(card);}
  const h=s.health||{};$('health').textContent='Запуск: '+at(s.started_at)+' · RAM процесса: '+((s.memory_rss_kib||0)/1024).toFixed(1)+' МиБ · Последняя успешная котировка: '+at(h.last_quote_ok)+' · Зафиксированных разрывов мониторинга: '+(h.gap_count||0)+(h.last_error?' · Последнее событие: '+h.last_error.stage+' / '+h.last_error.error+' / '+at(h.last_error.at):'');
- $('download').href=feed;
+ $('download').href=feed;updateCharts(s);
 }
 async function refresh(){if(busy)return;busy=true;$('refresh').disabled=true;try{const r=await fetch(feed+'?v='+Math.floor(Date.now()/60000),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const s=await r.json();if(s.mode!=='PAPER_ONLY'||!Array.isArray(s.wallets))throw Error('Неверный формат снимка');state=s;$('error').textContent=s.data_quality?.legacy_quote_outages?'⚠ Earlier quote gaps: results are provisional, not a clean strategy comparison.':'';render();}catch(e){$('error').textContent='Не удалось получить свежий снимок: '+e.message;if(state)render();}finally{busy=false;$('refresh').disabled=false;}}
 $('refresh').addEventListener('click',refresh);$('filter').addEventListener('change',()=>state&&render());refresh();setInterval(refresh,60000);
