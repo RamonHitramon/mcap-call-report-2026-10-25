@@ -1,4 +1,4 @@
-import {plotModel,pathFor} from './paper-chart-model.mjs?v=2';
+import {plotModel,pathFor} from './paper-chart-model.mjs?v=table1';
 const colors={tp20:'#8e9eff',tp30:'#50d7ad',tp50:'#ffca7a',tp100:'#ef91c2',trail50_20:'#66c8f2'};
 const names={tp20:'TP +20%',tp30:'TP +30%',tp50:'TP +50%',tp100:'TP 2×',trail50_20:'Trail +50% / 20%'};
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e};
