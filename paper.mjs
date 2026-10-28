@@ -1,4 +1,4 @@
-import {updateCharts} from './paper-charts.mjs';
+import {updateCharts} from './paper-charts.mjs?v=2';
 const feed='https://raw.githubusercontent.com/RamonHitramon/mcap-call-report-2026-10-25/paper-feed/live-paper.json';
 const $=id=>document.getElementById(id);
 const sol=v=>Number(v).toFixed(6)+' SOL';
